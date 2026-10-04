@@ -1,0 +1,2 @@
+-r requirements-prd.txt
+-r requirements-news.txt
