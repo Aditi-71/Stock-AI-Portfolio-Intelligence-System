@@ -16,14 +16,14 @@
 
 ---
 
-This project forecasts adjusted prices for **10 large-cap U.S. stocks** at **1- and 5-session horizons**. It benchmarks **8 model families** — four classical, four deep learning — against a random-walk baseline, and turns the forecasts into portfolio allocations and explainable buy/hold/sell recommendations.
+This project forecasts adjusted prices for **10 large-cap U.S. stocks** at **1- and 5-session horizons**. It benchmarks **8 model families** — four classical, four deep learning — against a random-walk baseline, and turns the forecasts into portfolio allocations and explainable buy/hold/sell recommendations. It was built during a project-based internship at Internmo.
 
 The focus is on **evaluation you can trust** rather than headline accuracy. Every split is chronological, labels that leak across blocks are purged, scalers are fit on training data only, models are selected on validation, and the random walk is kept as an honest yardstick — even when it wins.
 
 ## ✨ Highlights
 
 - **9-way model benchmark.** Random walk, Linear/Ridge, Random Forest, XGBoost, SVR, LSTM, GRU, Bidirectional LSTM and a Transformer encoder, all scored on identical forecast origins.
-- **Leakage-proof validation.** Expanding-window cross-validation with purging, strictly within-block sequence windows, training-only scaling, and a separate calibration block for prediction intervals.
+- **Leakage-aware validation.** Expanding-window cross-validation with purging, strictly within-block sequence windows, training-only scaling, and a separate calibration block for prediction intervals.
 - **363 engineered features.** Technical indicators, volatility, volume, lagged returns, calendar effects, market breadth and lag-adjusted FRED macro series.
 - **Financial NLP.** FinBERT and VADER sentiment, aligned to NYSE trading sessions, with explicit tracking of news-coverage gaps.
 - **Portfolio engine.** Ledoit–Wolf covariance, minimum-variance and maximum-Sharpe optimisation, an efficient frontier cross-checked against 20,000 Monte Carlo portfolios, and bootstrap Sharpe confidence intervals.
@@ -90,13 +90,15 @@ The test window starts just after the April 2025 sell-off, so every long-only st
 
 ### Earlier classification experiment
 
-An earlier phase of the project predicted AAPL's next-day **direction**. Random Forest reached a walk-forward ROC-AUC of 0.527, and a long/cash strategy built on it reached a Sharpe of 0.90, against 0.76 for buy-and-hold. Adding FinBERT sentiment from about 18,800 articles did **not** improve the model (−0.008 AUC). Full details are in [docs/CLASSIFICATION_EXPERIMENT.md](docs/CLASSIFICATION_EXPERIMENT.md).
+An earlier phase of the project predicted AAPL's next-day **direction** with six models: Logistic Regression, Random Forest, Gradient Boosting, XGBoost, LSTM and GRU. Random Forest looked strongest in walk-forward validation, with 52.99% accuracy and a ROC-AUC of 0.527, but it did **not** beat a naive always-up baseline (53.31%). On a later fixed holdout, its ROC-AUC fell to 0.49, with 51.14% accuracy. A long/cash strategy built on it reached a Sharpe of 0.90, against 0.76 for buy-and-hold.
+
+Adding FinBERT sentiment from about 18,800 articles did **not** improve the model (−0.008 AUC), so it was excluded. In the portfolio phase, a maximum-Sharpe allocation reached a Sharpe of 1.45 in training but only 0.99 over 21 unseen months once its weights were locked, below a minimum-variance portfolio at 1.54. Full details are in [docs/CLASSIFICATION_EXPERIMENT.md](docs/CLASSIFICATION_EXPERIMENT.md).
 
 ## 🚀 Quick start
 
 ```bash
-git clone https://github.com/<your-username>/stock-ai-system-prd.git
-cd stock-ai-system-prd
+git clone https://github.com/Aditi-71/Stock-AI-Portfolio-Intelligence-System.git
+cd Stock-AI-Portfolio-Intelligence-System
 
 conda create -n stock-ai python=3.11 -y
 conda activate stock-ai
@@ -207,7 +209,7 @@ The earlier classification project has its own multi-page app (`streamlit run da
 ## 📁 Project structure
 
 ```text
-stock-ai-system-prd/
+Stock-AI-Portfolio-Intelligence-System/
 ├── src/
 │   ├── prd/                  # Regression workflow (python -m src.prd)
 │   │   ├── __main__.py       #   CLI entry point
@@ -274,3 +276,7 @@ python -m unittest discover -s tests/news_collection -p test_collect_news_prd.py
 ## 📄 Disclaimer
 
 This is an educational research project. It does not place brokerage orders, does not give financial advice, and past performance does not guarantee future results.
+
+## 👤 Author
+
+**Aditi Biswas**. Built during a project-based internship(2026).
